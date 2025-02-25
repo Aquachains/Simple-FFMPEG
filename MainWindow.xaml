@@ -1,0 +1,129 @@
+﻿<mah:MetroWindow x:Class="Simple_FFMPEG.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Simple_FFMPEG"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+        mc:Ignorable="d"
+        AllowDrop="True"
+        Drop="MetroWindow_Drop"
+        GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
+        Closed="MetroWindow_Closed"
+        Title="Simple FFMPEG" Height="600" Width="1200" MinWidth="800" MinHeight="250" WindowStartupLocation="CenterScreen">
+    <mah:MetroWindow.LeftWindowCommands>
+        <mah:WindowCommands>
+            <Button Click="OpenUpGithubSite" ToolTip="Open up the GitHub site">
+                <iconPacks:PackIconModern Width="22"
+                                  Height="22"
+                                  Kind="SocialGithubOctocat" />
+            </Button>
+        </mah:WindowCommands>
+    </mah:MetroWindow.LeftWindowCommands>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="70"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="90"/>
+            <ColumnDefinition Width="40"/>
+            <ColumnDefinition Width="90"/>
+            <ColumnDefinition Width="70"/>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="90"/>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="50"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="35"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center">Filename:</Label>
+        <TextBox TextChanged="TbFilename_TextChanged" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" x:Name="tbFilename"></TextBox>
+        <Label HorizontalAlignment="Right" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">Preset:</Label>
+        <ComboBox x:Name="cbPreset" Grid.Row="0" Grid.Column="3" VerticalAlignment="Center" SelectedIndex="8">
+            <ComboBoxItem>ultrafast</ComboBoxItem>
+            <ComboBoxItem>superfast</ComboBoxItem>
+            <ComboBoxItem>veryfast</ComboBoxItem>
+            <ComboBoxItem>faster</ComboBoxItem>
+            <ComboBoxItem>fast</ComboBoxItem>
+            <ComboBoxItem>medium</ComboBoxItem>
+            <ComboBoxItem>slow</ComboBoxItem>
+            <ComboBoxItem>slower</ComboBoxItem>
+            <ComboBoxItem>veryslow</ComboBoxItem>
+        </ComboBox>
+        <Label HorizontalAlignment="Right" Grid.Row="0" Grid.Column="4" VerticalAlignment="Center">Tune:</Label>
+        <ComboBox x:Name="cbTune" Grid.Row="0" Grid.Column="5" VerticalAlignment="Center" SelectedIndex="0">
+            <ComboBoxItem>film</ComboBoxItem>
+            <ComboBoxItem>animation</ComboBoxItem>
+            <ComboBoxItem>grain</ComboBoxItem>
+            <ComboBoxItem>stillimage</ComboBoxItem>
+            <ComboBoxItem>fastdecode</ComboBoxItem>
+            <ComboBoxItem>zerolatency</ComboBoxItem>
+            <ComboBoxItem>psnr</ComboBoxItem>
+            <ComboBoxItem>ssim</ComboBoxItem>
+        </ComboBox>
+        <CheckBox HorizontalAlignment="Center" Grid.Row="0" Grid.Column="6" IsChecked="True" VerticalAlignment="Center" x:Name="checkAudio">Audio</CheckBox>
+        <CheckBox HorizontalAlignment="Center" Grid.Row="0" Grid.Column="7" VerticalAlignment="Center" x:Name="checkSubtitles">Subtitles</CheckBox>
+        <CheckBox Click="CheckUseGPU_Click" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="8" VerticalAlignment="Center" x:Name="checkUseGPU">Use GPU:</CheckBox>
+        <ComboBox Grid.Row="0" Grid.Column="9" VerticalAlignment="Center" IsEnabled="False" x:Name="cbHardwareAcceleration">
+            <ComboBoxItem>auto</ComboBoxItem>
+            <ComboBoxItem>cuda</ComboBoxItem>
+        </ComboBox>
+        <Button IsEnabled="False" Click="BtnAdd_Click" Margin="5 2"  Grid.Row="0" Grid.Column="10" x:Name="btnAdd">Add</Button>
+        <TextBlock Visibility="Hidden" x:Name="tbCmd" />
+        <Button IsEnabled="True" Click="BtnCMD_Click" Margin="0 2 5 2"  Grid.Row="0" Grid.Column="11" x:Name="btnCMD">CMD</Button>
+        <DataGrid ItemsSource="{Binding Items, UpdateSourceTrigger=PropertyChanged}" SelectionMode="Single" AutoGenerateColumns="False" x:Name="dgItems" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="12">
+            <DataGrid.Columns>
+                <DataGridTextColumn IsReadOnly="True" Width="Auto" Header="Name" Binding="{Binding Path=Name, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTemplateColumn IsReadOnly="True" Width="*" Header="Progress">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <mah:MetroProgressBar Margin="0 -5" Value="{Binding Path=Progress, UpdateSourceTrigger=PropertyChanged}">
+                                <mah:MetroProgressBar.Style>
+                                    <Style TargetType="{x:Type mah:MetroProgressBar}">
+                                        <Setter Property="IsIndeterminate" Value="False" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=Progress, UpdateSourceTrigger=PropertyChanged}" Value="-1">
+                                                <Setter Property="IsIndeterminate" Value="True" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </mah:MetroProgressBar.Style>
+                            </mah:MetroProgressBar>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn IsReadOnly="True" Width="Auto" Header="Preset" Binding="{Binding Path=Preset, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn IsReadOnly="True" Width="Auto" Header="Tune" Binding="{Binding Path=Tune, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridCheckBoxColumn IsReadOnly="True" Width="Auto" Header="Audio" Binding="{Binding Path=DoAudio, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridCheckBoxColumn IsReadOnly="True" Width="Auto" Header="Subtitles" Binding="{Binding Path=DoSubtitles, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn IsReadOnly="True" Width="Auto" Header="GPU" Binding="{Binding Path=GPU_Config, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn IsReadOnly="True" Width="Auto" Header="Status" Binding="{Binding Path=Status, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTemplateColumn Width="Auto" Header="Operation">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button x:Name="btnRemoveItem" Tag="{Binding Name}" Click="BtnRemoveItem_Click" Content="Remove">
+                                <Button.Style>
+                                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                                        <Setter Property="IsEnabled" Value="True" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ElementName=btnOperationAll, Path=Content}" Value="Stop all">
+                                                <Setter Property="IsEnabled" Value="False" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Margin="2 2" Grid.Column="0" Grid.Row="3" x:Name="btnOperationAll" Click="BtnOperationAll_Click">Start all</Button>
+    </Grid>
+</mah:MetroWindow>
