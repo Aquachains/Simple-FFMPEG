@@ -14,6 +14,7 @@ A simple Windows app for encoding multiple videos in sequence using FFmpeg.
 Unfinished jobs will be automatically saved when the program is closed and will be reloaded when restarted.
 
 ![Gif for guidance 01](https://github.com/Aquachains/Simple-FFMPEG/blob/main/Simple_FFMPEG_guide01.gif)
+*WPF and [MahApps.Metro](https://github.com/MahApps/MahApps.Metro) is used for the GUI.*
 
 ## Contribution
 If you find any bugs or would like to contribute to the project, feel free to open an issue or submit a pull request. Your contributions are welcome!
