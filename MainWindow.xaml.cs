@@ -65,6 +65,10 @@ namespace Simple_FFMPEG
                 var json = JsonConvert.SerializeObject(data, Formatting.Indented);
                 File.WriteAllText(_configFilename, json);
             }
+            else
+            {
+                File.WriteAllText(_configFilename, String.Empty);
+            }
         }
 
         private Item GetNextItem()
@@ -96,8 +100,9 @@ namespace Simple_FFMPEG
         private void Worker_ProgressChanged(object? sender, ProgressChangedEventArgs e)
         {
             var item = GetNextItem();
+            Debug.WriteLine($"File: {item?.Filename ?? "empty"} | Progress: {e.ProgressPercentage}");
 
-            if (item != null)
+            if (item != null && item.Status != "DONE")
             {
                 item.Progress = e.ProgressPercentage;
 
@@ -197,8 +202,6 @@ namespace Simple_FFMPEG
                             _worker.ReportProgress(item.MaxFrames == -1 ? -1 : (int)(((float)item.Frames / item.MaxFrames) * 100f));
                         }
                     }
-
-                    _worker.ReportProgress(100);
                 }
                 catch (Exception ex)
                 {
