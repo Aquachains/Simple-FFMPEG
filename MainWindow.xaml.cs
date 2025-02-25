@@ -282,7 +282,7 @@ namespace Simple_FFMPEG
         private async void BtnCMD_Click(object sender, RoutedEventArgs e)
         {
             // Open Input-Dialog for handling custom ffmpeg command options.
-            var task = await this.ShowInputAsync("Custom Command [Only for Advanced users!]", "Set your custom command for ffmpeg:", new MetroDialogSettings() { DefaultText = CMD_Format });
+            var task = await this.ShowInputAsync("Custom command [only for advanced users!]", "Set your custom command for ffmpeg:", new MetroDialogSettings() { DefaultText = CMD_Format });
 
             if (!String.IsNullOrWhiteSpace(task))
             {
